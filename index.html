@@ -1,0 +1,354 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#123f3b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="description" content="CRM mobile Espace Ergonomie">
+  <title>Espace Ergonomie — CRM</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root {
+      --green:#123f3b; --green2:#1c6259; --mint:#e8f2ef;
+      --bg:#f5f7f6; --white:#fff; --text:#172b29;
+      --muted:#71817e; --line:#e5ebe8; --red:#c64f4f;
+      --orange:#c78336; --shadow:0 5px 20px #173c3510;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      padding-bottom:90px}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    .top{background:var(--green);color:white;padding:22px 20px 26px;
+      border-radius:0 0 25px 25px}
+    .topline{display:flex;align-items:center;justify-content:space-between}
+    .brand{font-size:12px;letter-spacing:2px;font-weight:800;opacity:.8}
+    .top h1{font-size:25px;margin:20px 0 5px}
+    .top p{font-size:13px;margin:0;opacity:.75}
+    .wrap{padding:20px;max-width:760px;margin:auto}
+    .section-head{display:flex;align-items:center;justify-content:space-between;
+      gap:12px;margin:5px 0 15px}
+    h2{font-size:19px;margin:0}
+    h3{font-size:15px;margin:0}
+    .muted{color:var(--muted);font-size:12px}
+    .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:-3px}
+    .stat,.card{background:white;border:1px solid var(--line);border-radius:17px;
+      padding:16px;box-shadow:var(--shadow)}
+    .stat strong{display:block;font-size:27px;margin:8px 0 3px}
+    .stat span{font-size:12px;color:var(--muted)}
+    .stat .symbol{font-size:17px;color:var(--green2)}
+    .card{margin-bottom:11px}
+    .contact-card{display:flex;align-items:center;gap:12px}
+    .avatar{width:42px;height:42px;border-radius:14px;background:var(--mint);
+      color:var(--green);display:grid;place-items:center;font-weight:800;flex-shrink:0}
+    .contact-info{min-width:0;flex:1}
+    .contact-info strong{display:block;font-size:14px}
+    .contact-info small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .tag{display:inline-block;padding:5px 9px;border-radius:20px;
+      background:var(--mint);color:var(--green2);font-size:10px;font-weight:700}
+    .tag.late{background:#fbeaea;color:var(--red)}
+    .tag.soon{background:#fff2df;color:#9b641e}
+    .btn{border:0;border-radius:12px;padding:11px 15px;font-weight:700;
+      background:var(--green);color:white;font-size:13px}
+    .btn.secondary{background:var(--mint);color:var(--green)}
+    .btn.light{background:#f1f4f2;color:var(--text)}
+    .btn.danger{background:#fbeaea;color:var(--red)}
+    .btn.small{padding:8px 11px;font-size:12px}
+    .search{width:100%;padding:13px 14px;border:1px solid var(--line);
+      border-radius:12px;background:white;outline:none;margin-bottom:10px}
+    .filters{display:flex;gap:8px;overflow:auto;padding-bottom:12px}
+    .filters select{min-width:130px}
+    input,select,textarea{width:100%;padding:12px;border:1px solid var(--line);
+      border-radius:11px;background:white;color:var(--text);outline:none}
+    textarea{min-height:85px;resize:vertical}
+    label{display:block;font-size:12px;font-weight:700;margin:12px 0 6px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+    .form-grid .full{grid-column:1/-1}
+    .empty{text-align:center;padding:28px 15px;color:var(--muted);
+      font-size:13px;background:white;border-radius:16px;border:1px dashed var(--line)}
+    .bottom{position:fixed;bottom:0;left:0;right:0;z-index:5;
+      display:grid;grid-template-columns:repeat(4,1fr);background:#ffffffed;
+      backdrop-filter:blur(15px);border-top:1px solid var(--line);
+      padding:9px 8px calc(9px + env(safe-area-inset-bottom))}
+    .nav{border:0;background:transparent;color:#82908d;font-size:10px;
+      display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px}
+    .nav b{font-size:19px;font-weight:500}
+    .nav.active{color:var(--green);font-weight:800}
+    .hidden{display:none!important}
+    .modal{position:fixed;inset:0;background:#102b27a8;z-index:10;
+      display:flex;align-items:flex-end;justify-content:center}
+    .sheet{background:var(--bg);width:100%;max-width:760px;max-height:94vh;
+      overflow:auto;border-radius:23px 23px 0 0;padding:20px 20px 35px}
+    .sheet-head{display:flex;justify-content:space-between;align-items:center;
+      position:sticky;top:-20px;background:var(--bg);padding:5px 0 12px;z-index:2}
+    .close{border:0;background:#e8eeeb;border-radius:50%;width:34px;height:34px}
+    .actions{display:flex;gap:8px;margin-top:18px}
+    .actions button{flex:1}
+    .relance{border-left:4px solid var(--green2)}
+    .relance.late-border{border-left-color:var(--red)}
+    .detail-line{font-size:13px;margin:10px 0;line-height:1.5}
+    .detail-line b{color:var(--muted);font-size:11px;display:block;margin-bottom:2px}
+    .setting-row{display:flex;justify-content:space-between;align-items:center;
+      gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+    @media(min-width:600px){.stats{grid-template-columns:repeat(4,1fr)}
+      .modal{align-items:center;padding:20px}.sheet{border-radius:22px}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="topline">
+      <div class="brand">ESPACE ERGONOMIE</div>
+      <span style="font-size:12px;opacity:.8">CRM TERRAIN</span>
+    </div>
+    <h1 id="welcome">Bonjour 👋</h1>
+    <p>Vos contacts et vos prochaines opportunités.</p>
+  </header>
+
+  <main class="wrap">
+    <section id="dashboard">
+      <div class="section-head"><h2>Vue d'ensemble</h2><span class="muted" id="today"></span></div>
+      <div class="stats">
+        <div class="stat"><span class="symbol">◉</span><strong id="total">0</strong><span>Contacts enregistrés</span></div>
+        <div class="stat"><span class="symbol">↗</span><strong id="upcoming">0</strong><span>Relances à venir</span></div>
+        <div class="stat"><span class="symbol">!</span><strong id="late">0</strong><span>Relances en retard</span></div>
+        <div class="stat"><span class="symbol">★</span><strong id="high">0</strong><span>Potentiel élevé</span></div>
+      </div>
+      <div class="section-head" style="margin-top:28px">
+        <div><h2>À traiter en priorité</h2><p class="muted">Vos prochaines actions commerciales</p></div>
+        <button class="btn small" onclick="openForm()">+ Contact</button>
+      </div>
+      <div id="priorityList"></div>
+      <div class="section-head" style="margin-top:25px"><h2>Derniers contacts</h2></div>
+      <div id="recentList"></div>
+    </section>
+
+    <section id="contacts" class="hidden">
+      <div class="section-head"><h2>Répertoire</h2><button class="btn small" onclick="openForm()">+ Ajouter</button></div>
+      <input class="search" id="search" placeholder="Rechercher un nom, une entreprise, une ville…" oninput="renderContacts()">
+      <div class="filters">
+        <select id="typeFilter" onchange="renderContacts()">
+          <option value="">Tous les profils</option>
+          <option>Prospect</option><option>Prescripteur</option><option>Partenaire</option>
+          <option>Client</option><option>Concurrent</option>
+        </select>
+        <select id="deptFilter" onchange="renderContacts()">
+          <option value="">Tous départements</option>
+          <option>02</option><option>08</option><option>10</option><option>51</option><option>52</option><option>55</option>
+        </select>
+      </div>
+      <div id="contactList"></div>
+    </section>
+
+    <section id="followups" class="hidden">
+      <div class="section-head"><h2>Relances</h2><span class="muted">Suivi commercial</span></div>
+      <div id="followupList"></div>
+    </section>
+
+    <section id="settings" class="hidden">
+      <div class="section-head"><h2>Réglages</h2></div>
+      <div class="card">
+        <h3>Sauvegarde des données</h3>
+        <p class="muted">Les contacts restent enregistrés sur cet appareil. Exportez régulièrement une sauvegarde.</p>
+        <div class="actions">
+          <button class="btn" onclick="exportJSON()">Exporter JSON</button>
+          <button class="btn secondary" onclick="document.getElementById('restoreFile').click()">Restaurer</button>
+        </div>
+        <input id="restoreFile" type="file" accept=".json,application/json" class="hidden" onchange="importJSON(event)">
+        <div style="margin-top:12px"><button class="btn light" onclick="exportCSV()">Exporter CSV</button></div>
+        <p class="muted" id="backupDate" style="margin-top:12px"></p>
+      </div>
+      <div class="card">
+        <h3>Rappel de sauvegarde</h3>
+        <p class="muted">Pensez à exporter vos données au moins une fois par mois.</p>
+        <div id="backupReminder" class="tag"></div>
+      </div>
+      <div class="card">
+        <h3>À propos</h3>
+        <p class="muted">CRM personnel — Espace Ergonomie<br>Version 2.0 · Stockage local sur cet appareil.</p>
+      </div>
+      <div class="card">
+        <h3>Zone de prudence</h3>
+        <p class="muted">Ne saisissez aucune donnée médicale ou information de santé dans cet outil. Réservez les fiches aux informations strictement professionnelles.</p>
+        <button class="btn danger small" onclick="clearAll()">Effacer tous les contacts</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom">
+    <button class="nav active" data-tab="dashboard" onclick="showTab('dashboard',this)"><b>⌂</b>Accueil</button>
+    <button class="nav" data-tab="contacts" onclick="showTab('contacts',this)"><b>▤</b>Contacts</button>
+    <button class="nav" data-tab="followups" onclick="showTab('followups',this)"><b>◷</b>Relances</button>
+    <button class="nav" data-tab="settings" onclick="showTab('settings',this)"><b>⚙</b>Réglages</button>
+  </nav>
+
+  <div class="modal hidden" id="modal" onclick="if(event.target===this)closeForm()">
+    <div class="sheet">
+      <div class="sheet-head"><h2 id="formTitle">Nouveau contact</h2><button class="close" onclick="closeForm()">✕</button></div>
+      <form id="contactForm">
+        <input type="hidden" id="editId">
+        <div class="form-grid">
+          <div><label>Prénom</label><input id="firstName" autocomplete="given-name"></div>
+          <div><label>Nom *</label><input id="lastName" required autocomplete="family-name"></div>
+          <div><label>Fonction</label><input id="role" placeholder="Responsable RH…"></div>
+          <div><label>Structure *</label><input id="company" required placeholder="Entreprise / organisme"></div>
+          <div><label>Téléphone</label><input id="phone" type="tel"></div>
+          <div><label>Email</label><input id="email" type="email"></div>
+          <div><label>Ville</label><input id="city"></div>
+          <div><label>Département</label><select id="department"><option value="">—</option><option>02</option><option>08</option><option>10</option><option>51</option><option>52</option><option>55</option></select></div>
+          <div><label>Type de relation</label><select id="type"><option>Prospect</option><option>Prescripteur</option><option>Partenaire</option><option>Client</option><option>Concurrent</option></select></div>
+          <div><label>Potentiel</label><select id="potential"><option>À qualifier</option><option>Faible</option><option>Moyen</option><option>Élevé</option></select></div>
+          <div class="full"><label>Origine du contact</label><input id="source" placeholder="Salon, prospection, recommandation…"></div>
+          <div class="full"><label>Besoin identifié</label><select id="need"><option value="">À préciser</option><option>Prévention TMS</option><option>Ergonomie tertiaire</option><option>Ergonomie industrielle</option><option>Maintien dans l'emploi</option><option>Formation</option><option>Partenariat / prescription</option><option>Aménagement spécifique</option></select></div>
+          <div class="full"><label>Prestataire actuel</label><input id="provider"></div>
+          <div class="full"><label>Compte rendu / informations utiles</label><textarea id="notes"></textarea></div>
+          <div class="full"><label>Solutions ou matériel évoqués</label><textarea id="solutions"></textarea></div>
+          <div class="full"><label>Prochaine action</label><input id="action" placeholder="Envoyer le catalogue, rappeler, proposer un essai…"></div>
+          <div class="full"><label>Date de relance</label><input id="date" type="date"></div>
+        </div>
+        <div class="actions"><button type="button" class="btn light" onclick="closeForm()">Annuler</button><button class="btn" type="submit">Enregistrer</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="detailModal" onclick="if(event.target===this)closeDetail()">
+    <div class="sheet"><div class="sheet-head"><h2>Fiche contact</h2><button class="close" onclick="closeDetail()">✕</button></div><div id="detailContent"></div></div>
+  </div>
+
+<script>
+const KEY='ee_crm_contacts_v2';
+const BACKUP='ee_crm_backup_date';
+let contacts=JSON.parse(localStorage.getItem(KEY)||'[]');
+let activeTab='dashboard';
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const save=()=>localStorage.setItem(KEY,JSON.stringify(contacts));
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=d=>d?new Date(d+'T12:00:00').toLocaleDateString('fr-FR'):'Non définie';
+const initials=c=>((c.firstName||'').charAt(0)+(c.lastName||'').charAt(0)).toUpperCase()||'?';
+const sorted=()=>[...contacts].sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));
+
+function showTab(tab,btn){
+  activeTab=tab;
+  ['dashboard','contacts','followups','settings'].forEach(id=>$(id).classList.toggle('hidden',id!==tab));
+  document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));
+  render();
+}
+function render(){
+  $('today').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const late=contacts.filter(c=>c.date&&c.date<today()).length;
+  const upcoming=contacts.filter(c=>c.date&&c.date>=today()).length;
+  $('total').textContent=contacts.length;$('upcoming').textContent=upcoming;
+  $('late').textContent=late;$('high').textContent=contacts.filter(c=>c.potential==='Élevé').length;
+  const due=sorted().filter(c=>c.date).slice(0,6);
+  $('priorityList').innerHTML=due.length?due.map(c=>contactCard(c,true)).join(''):'<div class="empty">Aucune relance planifiée.<br>Ajoutez une date de relance à une fiche contact.</div>';
+  const recent=[...contacts].sort((a,b)=>b.createdAt-a.createdAt).slice(0,4);
+  $('recentList').innerHTML=recent.length?recent.map(c=>contactCard(c)).join(''):'<div class="empty">Vos premiers contacts apparaîtront ici.</div>';
+  renderContacts();renderFollowups();renderBackup();
+}
+function contactCard(c,withDate=false){
+  const overdue=c.date&&c.date<today();
+  return `<div class="card contact-card" onclick="openDetail('${c.id}')">
+    <div class="avatar">${esc(initials(c))}</div><div class="contact-info">
+    <strong>${esc(c.firstName)} ${esc(c.lastName)}</strong>
+    <small>${esc(c.company)}${c.city?' · '+esc(c.city):''}</small>
+    ${withDate&&c.date?`<small>${esc(c.action||'Relance')} · ${fmt(c.date)}</small>`:''}
+    </div><div>${withDate&&c.date?`<span class="tag ${overdue?'late':'soon'}">${overdue?'En retard':fmt(c.date)}</span>`:`<span class="tag">${esc(c.type)}</span>`}</div>
+  </div>`;
+}
+function renderContacts(){
+  if(!$('contactList'))return;
+  const q=($('search').value||'').toLowerCase();
+  const type=$('typeFilter').value,dept=$('deptFilter').value;
+  const list=[...contacts].sort((a,b)=>(a.lastName||'').localeCompare(b.lastName||'')).filter(c=>
+    (!q||[c.firstName,c.lastName,c.company,c.city,c.email].join(' ').toLowerCase().includes(q))&&
+    (!type||c.type===type)&&(!dept||c.department===dept));
+  $('contactList').innerHTML=list.length?list.map(c=>contactCard(c)).join(''):'<div class="empty">Aucun contact trouvé.</div>';
+}
+function renderFollowups(){
+  const list=sorted().filter(c=>c.date);
+  $('followupList').innerHTML=list.length?list.map(c=>`<div class="card relance ${c.date<today()?'late-border':''}">
+    <div class="section-head"><strong>${esc(c.firstName)} ${esc(c.lastName)}</strong><span class="tag ${c.date<today()?'late':'soon'}">${c.date<today()?'En retard':'À venir'}</span></div>
+    <div class="muted">${esc(c.company)} · ${fmt(c.date)}</div>
+    <p style="font-size:13px">${esc(c.action||'Action à définir')}</p>
+    <button class="btn secondary small" onclick="openDetail('${c.id}')">Voir la fiche</button>
+  </div>`).join(''):'<div class="empty">Aucune relance enregistrée.</div>';
+}
+function openForm(id){
+  $('contactForm').reset();$('editId').value='';
+  $('formTitle').textContent=id?'Modifier le contact':'Nouveau contact';
+  if(id){
+    const c=contacts.find(x=>x.id===id);if(!c)return;
+    $('editId').value=id;
+    ['firstName','lastName','role','company','phone','email','city','department','type','potential','source','need','provider','notes','solutions','action','date'].forEach(k=>$(k).value=c[k]||'');
+  }
+  $('modal').classList.remove('hidden');
+}
+function closeForm(){$('modal').classList.add('hidden')}
+$('contactForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const id=$('editId').value;
+  const fields=['firstName','lastName','role','company','phone','email','city','department','type','potential','source','need','provider','notes','solutions','action','date'];
+  const data={};fields.forEach(k=>data[k]=$(k).value.trim());
+  if(id){contacts=contacts.map(c=>c.id===id?{...c,...data}:c)}
+  else contacts.push({...data,id:crypto.randomUUID(),createdAt:Date.now()});
+  save();closeForm();render();
+});
+function openDetail(id){
+  const c=contacts.find(x=>x.id===id);if(!c)return;
+  const fields=[['Fonction',c.role],['Téléphone',c.phone],['Email',c.email],['Ville / département',[c.city,c.department].filter(Boolean).join(' · ')],['Relation',c.type],['Potentiel',c.potential],['Origine',c.source],['Besoin',c.need],['Prestataire actuel',c.provider],['Compte rendu',c.notes],['Solutions évoquées',c.solutions],['Prochaine action',c.action],['Date de relance',fmt(c.date)]];
+  $('detailContent').innerHTML=`<div class="contact-card" style="margin-bottom:20px"><div class="avatar">${esc(initials(c))}</div><div><h3>${esc(c.firstName)} ${esc(c.lastName)}</h3><span class="muted">${esc(c.company)}</span></div></div>
+  ${fields.filter(x=>x[1]).map(x=>`<div class="detail-line"><b>${esc(x[0])}</b>${esc(x[1])}</div>`).join('')}
+  <div class="actions"><button class="btn secondary" onclick="closeDetail();openForm('${c.id}')">Modifier</button><button class="btn danger" onclick="deleteContact('${c.id}')">Supprimer</button></div>`;
+  $('detailModal').classList.remove('hidden');
+}
+function closeDetail(){$('detailModal').classList.add('hidden')}
+function deleteContact(id){if(confirm('Supprimer définitivement ce contact ?')){contacts=contacts.filter(c=>c.id!==id);save();closeDetail();render()}}
+function renderBackup(){
+  const d=localStorage.getItem(BACKUP);
+  $('backupDate').textContent=d?'Dernier export : '+fmt(d):'Aucune sauvegarde exportée pour le moment.';
+  const old=!d||(Date.now()-new Date(d+'T12:00:00').getTime()>30*86400000);
+  $('backupReminder').textContent=old?'Sauvegarde à effectuer':'Sauvegarde récente';
+  $('backupReminder').className='tag '+(old?'soon':'');
+}
+function download(name,content,type){
+  const a=document.createElement('a');const url=URL.createObjectURL(new Blob([content],{type}));
+  a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);
+}
+function exportJSON(){
+  download('espace-ergonomie-crm-'+today()+'.json',JSON.stringify({version:2,exportedAt:new Date().toISOString(),contacts},null,2),'application/json');
+  localStorage.setItem(BACKUP,today());renderBackup();
+}
+function exportCSV(){
+  const fields=['firstName','lastName','role','company','phone','email','city','department','type','potential','source','need','provider','notes','solutions','action','date'];
+  const csv=[fields.join(';'),...contacts.map(c=>fields.map(k=>'"'+String(c[k]||'').replace(/"/g,'""')+'"').join(';'))].join('\n');
+  download('espace-ergonomie-contacts-'+today()+'.csv','\ufeff'+csv,'text/csv;charset=utf-8');
+}
+function importJSON(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{const data=JSON.parse(reader.result);const imported=Array.isArray(data)?data:data.contacts;
+      if(!Array.isArray(imported))throw Error();
+      if(confirm('Remplacer les contacts actuels par les '+imported.length+' contacts de la sauvegarde ?')){
+        contacts=imported;save();render();alert('Sauvegarde restaurée.');
+      }
+    }catch{alert('Fichier de sauvegarde invalide.')}
+    e.target.value='';
+  };reader.readAsText(file);
+}
+function clearAll(){
+  if(confirm('Attention : cette action effacera tous les contacts de cet appareil. Continuer ?')&&confirm('Dernière confirmation : avez-vous exporté une sauvegarde ?')){
+    contacts=[];save();render();
+  }
+}
+$('welcome').textContent='Bonjour 👋';
+render();
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
